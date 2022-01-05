@@ -1,4 +1,4 @@
-module src.token;
+module token;
 
 import std.conv     : to;
 import std.format   : format;
@@ -16,9 +16,17 @@ public:
 
     enum Type 
     {
-        CMD,
-        COLON,
-        EOF,
+        CMD, SYMBOL,
+
+        FN, IF_ERR, VAR,
+
+        QUOTE,     
+
+        EQUAL,
+
+        ARROW,
+
+        EOF, END,
     }
 
     override string toString() const 
@@ -29,7 +37,7 @@ public:
         line);
     }
 
-    Type type;
+    Type   type;
     string lexeme;
-    int line;
+    int    line;
 }

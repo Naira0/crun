@@ -1,39 +1,16 @@
-module src.main;
+module main;
 
 import std.stdio;
 import std.file;
-import std.array : appender;
 import std.process;
 import core.runtime : Runtime;
-import core.stdc.stdlib;
+import std.datetime.stopwatch;
 
 import token;
 import lexer;
 import parser;
-
-void fatal(string message)
-{
-    writeln("Fatal Error: ", message);
-    exit(-1);
-}
-
-string command_args(string cmd_name, string[] args)
-{
-    auto builder = appender!string;
-
-    builder.reserve(args.length+1);
-
-    builder.put(cmd_name);
-    builder.put(" ");
-
-    foreach (arg; args)
-    {
-        builder.put(arg);
-        builder.put(" ");
-    }
-
-    return builder.data;
-}
+import log;
+import command;
 
 void run(string contents)
 {
@@ -41,30 +18,26 @@ void run(string contents)
 
     auto tokens = lexer.scan();
 
-    string[string] cmd_map;
+    auto runtime = new parser.Runtime(tokens);
 
-    try
-    {
-        cmd_map = parse(tokens);
-    }
-    catch(Exception e)
-    {
-        fatal(e.msg);
-    }
+    runtime.parse();
 
     string[] args = Runtime.args;
 
-    if(args.length == 1)
-        fatal("A command name must be provided");
+    bool has_default = cast(bool)("default" in runtime.commands);
 
-    if(args[1] !in cmd_map) 
-        fatal("invalid command name provided");
+    if((args.length == 1 && !has_default) || (args.length > 1 && args[1] !in runtime.commands))
+        fatal("must provide a command name");
 
-    string command = cmd_map[args[1]];
+    Token[] cmd = runtime.commands[has_default ? "default" : args[1]];
 
-    auto exec = executeShell(command_args(command, args[2..$]));
+    runtime.variables["args"] = args[(has_default ? 1 : 2)..$];
 
-    exec.output.writeln;
+    auto command = new Command(cmd, runtime.variables, runtime.commands);
+
+    command.parse();
+
+    command.run();
 }
 
 void main()
@@ -77,8 +50,8 @@ void main()
     }
     catch(FileException e)
     {
-        fatal(e.msg);
+        fatal("A valid CRUN file must exist in the directory");
     }
-    
+
     run(contents);
 }
