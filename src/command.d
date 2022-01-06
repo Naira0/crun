@@ -151,7 +151,6 @@ private:
         string[] args;
 
         i++;
-
         while(!at_end && tokens[i].type != Token.Type.END)
         {
             if(tokens[i].type == Token.Type.IF_ERR)

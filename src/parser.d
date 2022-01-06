@@ -36,12 +36,13 @@ public:
                     if(cmd_name in commands)
                         fatal("command '", cmd_name, "' has already been defined");
 
-                    commands[cmd_name] = tokens[start..i-1];
+                    commands[cmd_name] = tokens[start..i];
                 }
 
                 cmd_name = token.lexeme;
                 start = i+1;
             }
+
         }
     }
 

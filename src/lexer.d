@@ -184,7 +184,7 @@ private:
 
     bool valid_char(char c)
     {
-        return c != ' ' && c != '\n' && c != '\t';
+        return c != ' ' && c != '\n' && c != '\t' && c != '\r';
     }
 
     void set_token(Token.Type type)

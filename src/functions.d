@@ -13,6 +13,7 @@ export FN*[string] function_table;
 shared static this()
 {
     function_table["print"]             = &print;
+    function_table["error"]             = &error;
     function_table["loop"]              = &loop;
     function_table["end_loop"]          = &end_loop;
     function_table["display_commands"]  = &display_commands;
