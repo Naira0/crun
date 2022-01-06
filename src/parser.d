@@ -17,8 +17,8 @@ public:
 
     void parse()
     {
-        string cmd_name;
-        int    start = 0;
+        string    cmd_name;
+        size_t    start = 0;
 
         for(i = 0; i < tokens.length; i++)
         {
