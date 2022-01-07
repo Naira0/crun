@@ -1,0 +1,23 @@
+
+// using crun to build crun.
+
+files         = ./src/main.d ./src/parser.d ./src/token.d ./src/log.d ./src/lexer.d ./src/functions.d ./src/command.d
+release_flags = -O -release -boundscheck=off
+debug_flags   = -debug -profile
+outfile       = -of=crun.exe
+
+// builds crun
+build:
+   ldc2 @release_flags @outfile @files ? $error => could not build release mode
+   $print => crun has been built with release mode
+
+build-debug:
+   ldc2 @debug_flags @outfile @files ? $error => could not build debug mode 
+   $print => crun has been built with debug mode
+
+project-files:
+   $print => @files 
+
+default:
+   $print => "available commands:"
+   $display_commands
