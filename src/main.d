@@ -29,9 +29,18 @@ void run(string contents)
     if((args.length == 1 && !has_default) || (args.length > 1 && args[1] !in runtime.commands))
         fatal("must provide a command name");
 
-    Token[] cmd = runtime.commands[has_default ? "default" : args[1]];
+    Token[] cmd;
 
-    runtime.variables["args"] = args[(has_default ? 1 : 2)..$];
+    if(args.length == 1 && has_default)
+    {
+        cmd = runtime.commands["default"];
+        runtime.variables["args"] = args[1..$];
+    }
+    else
+    {
+        cmd = runtime.commands[args[1]];
+        runtime.variables["args"] = args[2..$];
+    }
 
     auto command = new Command(cmd, runtime.variables, runtime.commands);
 

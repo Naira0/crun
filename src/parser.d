@@ -93,8 +93,7 @@ private:
 
     Token last_token()
     {
-        // catchs potential underflow errors
-        if(i-1 < 0 || i-1 == i.max)
+        if(i == 0)
             return null;
         return tokens[i-1];
     }
